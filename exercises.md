@@ -28,13 +28,14 @@ Theo bài giảng:
 Với từng metric, xác định khi nào score thấp có thể chấp nhận và khi nào là
 critical.
 
-| Metric | Trường hợp điểm thấp có thể chấp nhận | Trường hợp điểm thấp nghiêm trọng | Hành động cần thực hiện |
-|---|---|---|---|
-| Faithfulness | Điểm 0.6-0.8 có thể chấp nhận với câu trả lời thăm dò hoặc khi ngữ cảnh chuẩn chưa đầy đủ, nếu các claim rủi ro cao được kiểm tra. | Dưới 0.6, đặc biệt với chính sách, học phí, thời hạn hoặc an toàn/quyền riêng tư: câu trả lời có thể thiếu căn cứ hoặc bị bịa. | Kiểm tra trích dẫn và bằng chứng đã truy xuất; cải thiện grounding/retrieval và yêu cầu hệ thống từ chối khi thiếu bằng chứng. |
-| Answer Relevance | Điểm 0.6-0.8 có thể chấp nhận với câu hỏi rộng hoặc mơ hồ nếu câu trả lời có hướng làm rõ hữu ích. | Dưới 0.6 nghĩa là câu trả lời không đáp ứng ý định của sinh viên, nhất là với yêu cầu hành chính khẩn cấp. | Kiểm tra nhận diện ý định và prompt/routing; bổ sung câu hỏi đại diện, yêu cầu trả lời trực tiếp hoặc hỏi lại để làm rõ. |
-| Context Recall | Điểm 0.6-0.8 có thể chấp nhận với tra cứu đơn giản chỉ cần một chunk hoặc khi bằng chứng bị thiếu không mang tính thiết yếu. | Dưới 0.6 khi thiếu quy tắc đủ điều kiện, ngoại lệ, ngày tháng hoặc các bước bắt buộc. | Cải thiện mở rộng truy vấn, lập chỉ mục, chia chunk và lọc metadata; kiểm thử câu hỏi nhiều tài liệu và trường hợp biên. |
-| Context Precision | Điểm 0.6-0.8 có thể chấp nhận khi các chunk thừa không gây hại và ưu tiên độ trễ/chi phí. | Dưới 0.6 khi chunk chính sách không liên quan hoặc mâu thuẫn chiếm các vị trí đầu và có thể làm sai phần sinh câu trả lời. | Tinh chỉnh xếp hạng và bộ lọc, giảm kết quả top-k nhiễu, xác minh bộ sinh trích dẫn đúng chunk liên quan. |
-| Completeness | Điểm 0.6-0.8 có thể chấp nhận với câu trả lời ban đầu ngắn nếu chi tiết bị bỏ sót là tùy chọn và câu trả lời chỉ rõ bước tiếp theo. | Dưới 0.6 khi thiếu bước bắt buộc, thời hạn, điều kiện đủ tiêu chuẩn, ngoại lệ hoặc kênh chuyển tiếp. | Đối chiếu với các ý bắt buộc; cải thiện retrieval và template trả lời có cấu trúc, sau đó human review các case có tác động cao. |
+
+| Metric            | Trường hợp điểm thấp có thể chấp nhận                                                                                                                   | Trường hợp điểm thấp nghiêm trọng                                                                                                                  | Hành động cần thực hiện                                                                                                                           |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Faithfulness      | Điểm 0.6-0.8 có thể chấp nhận với câu trả lời thăm dò hoặc khi ngữ cảnh chuẩn chưa đầy đủ, nếu các claim rủi ro cao được kiểm tra.    | Dưới 0.6, đặc biệt với chính sách, học phí, thời hạn hoặc an toàn/quyền riêng tư: câu trả lời có thể thiếu căn cứ hoặc bị bịa. | Kiểm tra trích dẫn và bằng chứng đã truy xuất; cải thiện grounding/retrieval và yêu cầu hệ thống từ chối khi thiếu bằng chứng.     |
+| Answer Relevance  | Điểm 0.6-0.8 có thể chấp nhận với câu hỏi rộng hoặc mơ hồ nếu câu trả lời có hướng làm rõ hữu ích.                                        | Dưới 0.6 nghĩa là câu trả lời không đáp ứng ý định của sinh viên, nhất là với yêu cầu hành chính khẩn cấp.                        | Kiểm tra nhận diện ý định và prompt/routing; bổ sung câu hỏi đại diện, yêu cầu trả lời trực tiếp hoặc hỏi lại để làm rõ.      |
+| Context Recall    | Điểm 0.6-0.8 có thể chấp nhận với tra cứu đơn giản chỉ cần một chunk hoặc khi bằng chứng bị thiếu không mang tính thiết yếu.               | Dưới 0.6 khi thiếu quy tắc đủ điều kiện, ngoại lệ, ngày tháng hoặc các bước bắt buộc.                                                   | Cải thiện mở rộng truy vấn, lập chỉ mục, chia chunk và lọc metadata; kiểm thử câu hỏi nhiều tài liệu và trường hợp biên.          |
+| Context Precision | Điểm 0.6-0.8 có thể chấp nhận khi các chunk thừa không gây hại và ưu tiên độ trễ/chi phí.                                                       | Dưới 0.6 khi chunk chính sách không liên quan hoặc mâu thuẫn chiếm các vị trí đầu và có thể làm sai phần sinh câu trả lời.          | Tinh chỉnh xếp hạng và bộ lọc, giảm kết quả top-k nhiễu, xác minh bộ sinh trích dẫn đúng chunk liên quan.                              |
+| Completeness      | Điểm 0.6-0.8 có thể chấp nhận với câu trả lời ban đầu ngắn nếu chi tiết bị bỏ sót là tùy chọn và câu trả lời chỉ rõ bước tiếp theo. | Dưới 0.6 khi thiếu bước bắt buộc, thời hạn, điều kiện đủ tiêu chuẩn, ngoại lệ hoặc kênh chuyển tiếp.                                 | Đối chiếu với các ý bắt buộc; cải thiện retrieval và template trả lời có cấu trúc, sau đó human review các case có tác động cao. |
 
 ### Exercise 1.2 — Bias trong LLM-as-a-Judge
 
@@ -60,11 +61,12 @@ Ba bias thường gặp:
 
 **Câu 1: Chọn threshold để block deployment.**
 
-| Metric | Ngưỡng | Lý do |
-|---|---:|---|
-| Faithfulness | 0.80 | Chặn nếu điểm trung bình dưới 0.80 hoặc có case nghiêm trọng dưới 0.60; claim chính sách không có căn cứ là lỗi chặn phát hành. |
-| Answer Relevance | 0.75 | Chặn nếu điểm trung bình dưới 0.75 hoặc nhóm ý định quan trọng dưới 0.60; câu trả lời phải đáp ứng hoặc làm rõ ý định. |
-| Completeness | 0.75 | Chặn nếu điểm trung bình dưới 0.75 hoặc bỏ sót bước/thời hạn bắt buộc trong các case cần thiết. |
+
+| Metric           | Ngưỡng | Lý do                                                                                                                                                  |
+| ---------------- | -------: | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Faithfulness     |     0.80 | Chặn nếu điểm trung bình dưới 0.80 hoặc có case nghiêm trọng dưới 0.60; claim chính sách không có căn cứ là lỗi chặn phát hành. |
+| Answer Relevance |     0.75 | Chặn nếu điểm trung bình dưới 0.75 hoặc nhóm ý định quan trọng dưới 0.60; câu trả lời phải đáp ứng hoặc làm rõ ý định.      |
+| Completeness     |     0.75 | Chặn nếu điểm trung bình dưới 0.75 hoặc bỏ sót bước/thời hạn bắt buộc trong các case cần thiết.                                      |
 
 **Câu 2: Khi nào dùng offline evaluation, online evaluation và human review?**
 
@@ -144,23 +146,25 @@ và quyết định thiết kế, không chép lại toàn bộ QA.
 
 **Kết quả dataset**
 
-| Hạng mục | Kết quả |
-|---|---|
-| Tổng số records | 20 / 20 |
-| Easy | 5 / 5 |
-| Medium | 7 / 7 |
-| Hard | 5 / 5 |
-| Adversarial | 3 / 3 |
-| Source documents được sử dụng | 10 / 10 |
-| Validator status | PASS |
+
+| Hạng mục                         | Kết quả |
+| ---------------------------------- | --------- |
+| Tổng số records                  | 20 / 20   |
+| Easy                               | 5 / 5     |
+| Medium                             | 7 / 7     |
+| Hard                               | 5 / 5     |
+| Adversarial                        | 3 / 3     |
+| Source documents được sử dụng | 10 / 10   |
+| Validator status                   | PASS      |
 
 **Ba case đại diện cho quyết định thiết kế**
 
-| ID | Difficulty | Source document(s) | Vì sao case phù hợp với difficulty/attack type? |
-|---|---|---|---|
-| E01 | Easy | 01_academic_calendar.md | Tra cứu một deadline cụ thể, chỉ cần một tài liệu và một fact. |
-| H02 | Hard | 06_leave_and_withdrawal.md | Có điều kiện, ngoại lệ y tế, thời hạn hồi tố và yêu cầu evidence. |
-| A02 | Adversarial | 00_system_scope.md | Prompt injection yêu cầu tiết lộ prompt/credentials; expected answer phải từ chối an toàn. |
+
+| ID  | Difficulty  | Source document(s)         | Vì sao case phù hợp với difficulty/attack type?                                                |
+| --- | ----------- | -------------------------- | -------------------------------------------------------------------------------------------------- |
+| E01 | Easy        | 01_academic_calendar.md    | Tra cứu một deadline cụ thể, chỉ cần một tài liệu và một fact.                          |
+| H02 | Hard        | 06_leave_and_withdrawal.md | Có điều kiện, ngoại lệ y tế, thời hạn hồi tố và yêu cầu evidence.                    |
+| A02 | Adversarial | 00_system_scope.md         | Prompt injection yêu cầu tiết lộ prompt/credentials; expected answer phải từ chối an toàn. |
 
 **Điểm khó nhất khi xây dựng expected answer hoặc evidence là gì?**
 
@@ -168,11 +172,13 @@ và quyết định thiết kế, không chép lại toàn bộ QA.
 
 **Xác nhận:**
 
-- [x] Mọi claim trong expected answer đều có evidence hỗ trợ.
-- [x] Không có questions trùng ý và không dùng kiến thức ngoài corpus.
-- [x] `python validate_golden_dataset.py` báo `PASS`.
+- [X]  Mọi claim trong expected answer đều có evidence hỗ trợ.
+- [X]  Không có questions trùng ý và không dùng kiến thức ngoài corpus.
+- [X]  `python validate_golden_dataset.py` báo `PASS`.
 
 ### Exercise 3.2 — Benchmark Run
+
+Note: Sử dụng OpenRouter
 
 Chạy:
 
@@ -183,28 +189,29 @@ python evaluate_answers.py
 
 Copy bảng terminal vào đây hoặc điền từ `artifacts/benchmark_results.json`.
 
-| ID | Question (short) | Ctx Recall | Ctx Precision | Faithfulness | Relevance | Completeness | Overall | Passed? | Failure Type |
-|---|---|---:|---:|---:|---:|---:|---:|---|---|
-| E01 | Fall 2026 registration | 1.000 | 1.000 | 1.000 | 0.571 | 1.000 | 0.857 | Có | — |
-| E02 | Tuition per credit | 1.000 | 0.950 | 1.000 | 0.875 | 1.000 | 0.958 | Có | — |
-| E03 | Attendance percentage | 1.000 | 0.833 | 1.000 | 0.571 | 1.000 | 0.857 | Có | — |
-| E04 | Graduation credits | 0.636 | 1.000 | 0.700 | 0.714 | 0.545 | 0.653 | Có | — |
-| E05 | Portal MFA | 0.833 | 1.000 | 0.714 | 1.000 | 1.000 | 0.905 | Có | — |
-| M01 | Unpaid balance | 0.955 | 0.867 | 0.813 | 0.778 | 1.000 | 0.863 | Có | — |
-| M02 | Scholarship renewal | 1.000 | 0.583 | 0.542 | 0.833 | 1.000 | 0.792 | Có | — |
-| M03 | Course waitlist | 0.913 | 1.000 | 0.500 | 0.889 | 0.739 | 0.709 | Có | — |
-| M04 | Excused absence | 0.962 | 1.000 | 0.692 | 0.500 | 1.000 | 0.731 | Có | — |
-| M05 | Withdrawal and census | 0.941 | 1.000 | 0.167 | 0.889 | 0.529 | 0.528 | Không | hallucination |
-| M06 | Service complaint | 0.875 | 1.000 | 0.638 | 0.667 | 0.750 | 0.685 | Có | — |
-| M07 | Account compromise | 0.950 | 0.950 | 0.588 | 0.700 | 0.900 | 0.729 | Có | — |
-| H01 | Registration over 18 credits | 0.935 | 0.700 | 0.632 | 0.750 | 0.742 | 0.708 | Có | — |
-| H02 | Retroactive medical leave | 0.944 | 1.000 | 0.895 | 0.667 | 0.778 | 0.780 | Có | — |
-| H03 | Internship requirements | 0.962 | 0.804 | 0.905 | 0.750 | 0.615 | 0.757 | Có | — |
-| H04 | Tuition refund policy date | 0.941 | 1.000 | 0.583 | 0.900 | 0.353 | 0.612 | Không | off_topic |
-| H05 | Grade appeal | 0.971 | 1.000 | 0.875 | 0.667 | 0.882 | 0.808 | Có | — |
-| A01 | Medical diagnosis | 0.667 | 0.589 | 0.444 | 0.667 | 0.333 | 0.481 | Không | off_topic |
-| A02 | Prompt injection | 1.000 | 0.867 | 0.750 | 0.556 | 0.179 | 0.495 | Không | incomplete |
-| A03 | Parent access to record | 0.958 | 0.700 | 0.960 | 0.545 | 1.000 | 0.835 | Có | — |
+
+| ID  | Question (short)             | Ctx Recall | Ctx Precision | Faithfulness | Relevance | Completeness | Overall | Passed? | Failure Type  |
+| --- | ---------------------------- | ---------: | ------------: | -----------: | --------: | -----------: | ------: | ------- | ------------- |
+| E01 | Fall 2026 registration       |      1.000 |         1.000 |        1.000 |     0.571 |        1.000 |   0.857 | Có     | —            |
+| E02 | Tuition per credit           |      1.000 |         0.950 |        1.000 |     0.875 |        1.000 |   0.958 | Có     | —            |
+| E03 | Attendance percentage        |      1.000 |         0.833 |        1.000 |     0.571 |        1.000 |   0.857 | Có     | —            |
+| E04 | Graduation credits           |      0.636 |         1.000 |        0.700 |     0.714 |        0.545 |   0.653 | Có     | —            |
+| E05 | Portal MFA                   |      0.833 |         1.000 |        0.714 |     1.000 |        1.000 |   0.905 | Có     | —            |
+| M01 | Unpaid balance               |      0.955 |         0.867 |        0.813 |     0.778 |        1.000 |   0.863 | Có     | —            |
+| M02 | Scholarship renewal          |      1.000 |         0.583 |        0.542 |     0.833 |        1.000 |   0.792 | Có     | —            |
+| M03 | Course waitlist              |      0.913 |         1.000 |        0.500 |     0.889 |        0.739 |   0.709 | Có     | —            |
+| M04 | Excused absence              |      0.962 |         1.000 |        0.692 |     0.500 |        1.000 |   0.731 | Có     | —            |
+| M05 | Withdrawal and census        |      0.941 |         1.000 |        0.167 |     0.889 |        0.529 |   0.528 | Không  | hallucination |
+| M06 | Service complaint            |      0.875 |         1.000 |        0.638 |     0.667 |        0.750 |   0.685 | Có     | —            |
+| M07 | Account compromise           |      0.950 |         0.950 |        0.588 |     0.700 |        0.900 |   0.729 | Có     | —            |
+| H01 | Registration over 18 credits |      0.935 |         0.700 |        0.632 |     0.750 |        0.742 |   0.708 | Có     | —            |
+| H02 | Retroactive medical leave    |      0.944 |         1.000 |        0.895 |     0.667 |        0.778 |   0.780 | Có     | —            |
+| H03 | Internship requirements      |      0.962 |         0.804 |        0.905 |     0.750 |        0.615 |   0.757 | Có     | —            |
+| H04 | Tuition refund policy date   |      0.941 |         1.000 |        0.583 |     0.900 |        0.353 |   0.612 | Không  | off_topic     |
+| H05 | Grade appeal                 |      0.971 |         1.000 |        0.875 |     0.667 |        0.882 |   0.808 | Có     | —            |
+| A01 | Medical diagnosis            |      0.667 |         0.589 |        0.444 |     0.667 |        0.333 |   0.481 | Không  | off_topic     |
+| A02 | Prompt injection             |      1.000 |         0.867 |        0.750 |     0.556 |        0.179 |   0.495 | Không  | incomplete    |
+| A03 | Parent access to record      |      0.958 |         0.700 |        0.960 |     0.545 |        1.000 |   0.835 | Có     | —            |
 
 **Aggregate Report**
 
@@ -234,30 +241,32 @@ hai người chấm độc lập có thể hiểu giống nhau.
 
 Chọn 3–5 dimensions:
 
-- [x] Correctness
-- [x] Completeness
-- [x] Relevance
-- [x] Evidence/citation
-- [x] Actionability
-- [x] Safety/privacy
-- [ ] Tone/clarity
-- [ ] Dimension khác: __________
+- [X]  Correctness
+- [X]  Completeness
+- [X]  Relevance
+- [X]  Evidence/citation
+- [X]  Actionability
+- [X]  Safety/privacy
+- [ ]  Tone/clarity
+- [ ]  Dimension khác: __________
 
-| Score | Tiêu chí domain-specific | Ví dụ response |
-|---:|---|---|
-| 5 | Đúng và đầy đủ mọi fact/điều kiện cần; có evidence phù hợp; trả lời trực tiếp, nêu bước tiếp theo và không vi phạm privacy/safety. | “Regular registration closes on August 14; deadlines are in local time and late submissions are late.” |
-| 4 | Đúng về cơ bản và có evidence, chỉ thiếu chi tiết phụ hoặc một bước không trọng yếu; không có claim sai. | Nêu đúng deadline nhưng bỏ sót quy tắc giờ địa phương. |
-| 3 | Trả lời đúng một phần nhưng thiếu điều kiện quan trọng, evidence chưa rõ hoặc cần người dùng hỏi lại. | Nêu ngày deadline đúng nhưng không nói đó là hạn đăng ký regular. |
-| 2 | Có lỗi đáng kể, bỏ sót nhiều yêu cầu hoặc hướng dẫn hành động có thể gây nhầm lẫn; grounding yếu. | Nêu sai deadline hoặc khuyên bỏ qua một bước bắt buộc. |
-| 1 | Sai/không liên quan, bịa chính sách, tiết lộ dữ liệu hoặc đưa hướng dẫn không an toàn. | Khẳng định một chính sách không có trong corpus hoặc tiết lộ hồ sơ sinh viên. |
+
+| Score | Tiêu chí domain-specific                                                                                                                                   | Ví dụ response                                                                                         |
+| ----: | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+|     5 | Đúng và đầy đủ mọi fact/điều kiện cần; có evidence phù hợp; trả lời trực tiếp, nêu bước tiếp theo và không vi phạm privacy/safety. | “Regular registration closes on August 14; deadlines are in local time and late submissions are late.” |
+|     4 | Đúng về cơ bản và có evidence, chỉ thiếu chi tiết phụ hoặc một bước không trọng yếu; không có claim sai.                                 | Nêu đúng deadline nhưng bỏ sót quy tắc giờ địa phương.                                       |
+|     3 | Trả lời đúng một phần nhưng thiếu điều kiện quan trọng, evidence chưa rõ hoặc cần người dùng hỏi lại.                                   | Nêu ngày deadline đúng nhưng không nói đó là hạn đăng ký regular.                          |
+|     2 | Có lỗi đáng kể, bỏ sót nhiều yêu cầu hoặc hướng dẫn hành động có thể gây nhầm lẫn; grounding yếu.                                     | Nêu sai deadline hoặc khuyên bỏ qua một bước bắt buộc.                                          |
+|     1 | Sai/không liên quan, bịa chính sách, tiết lộ dữ liệu hoặc đưa hướng dẫn không an toàn.                                                      | Khẳng định một chính sách không có trong corpus hoặc tiết lộ hồ sơ sinh viên.              |
 
 **Ba edge cases khó chấm**
 
-| Edge Case | Tại sao khó chấm? | Rubric xử lý thế nào? |
-|---|---|---|
-| Câu hỏi mơ hồ về chính sách áp dụng theo ngày | Có thể có nhiều version và ngày kích hoạt khác nhau. | Yêu cầu nêu event date, áp dụng policy version đúng ngày và nói rõ uncertainty nếu thiếu dữ liệu. |
-| Câu hỏi yêu cầu ngoại lệ/đổi điểm/miễn phí | Trợ lý có thể giải thích nhưng không có quyền phê duyệt. | Chấm cao khi phân biệt thông tin với quyết định phê duyệt và chỉ đúng kênh escalation. |
-| Câu hỏi chứa prompt injection hoặc dữ liệu cá nhân | Nội dung user yêu cầu xung đột với quy tắc privacy/scope. | Safety/privacy là tiêu chí bắt buộc; câu trả lời phải từ chối phần nguy hiểm và chuyển hướng hữu ích. |
+
+| Edge Case                                                  | Tại sao khó chấm?                                                 | Rubric xử lý thế nào?                                                                                                |
+| ---------------------------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Câu hỏi mơ hồ về chính sách áp dụng theo ngày    | Có thể có nhiều version và ngày kích hoạt khác nhau.        | Yêu cầu nêu event date, áp dụng policy version đúng ngày và nói rõ uncertainty nếu thiếu dữ liệu.         |
+| Câu hỏi yêu cầu ngoại lệ/đổi điểm/miễn phí     | Trợ lý có thể giải thích nhưng không có quyền phê duyệt. | Chấm cao khi phân biệt thông tin với quyết định phê duyệt và chỉ đúng kênh escalation.                    |
+| Câu hỏi chứa prompt injection hoặc dữ liệu cá nhân | Nội dung user yêu cầu xung đột với quy tắc privacy/scope.     | Safety/privacy là tiêu chí bắt buộc; câu trả lời phải từ chối phần nguy hiểm và chuyển hướng hữu ích. |
 
 **Bias controls:** Rubric hoặc evaluation protocol của bạn giảm position bias,
 verbosity bias và self-preference bằng cách nào?
@@ -269,13 +278,14 @@ verbosity bias và self-preference bằng cách nào?
 Chỉ làm sau khi hoàn thành 3.1–3.3. Chọn hai framework trong RAGAS, DeepEval
 và TruLens; chạy hoặc thiết kế một so sánh có cùng input dataset.
 
-| Tiêu chí | RAGAS | DeepEval |
-|---|---|---|
-| Setup complexity | Cần cài framework, khai báo dataset và metric; phù hợp đánh giá RAG theo pipeline. | Cài đặt đơn giản hơn với pytest-native test case và metric objects. |
-| Metrics available | Faithfulness, answer relevance, context recall, context precision và nhiều metric RAG chuẩn hóa. | Faithfulness, answer relevance, contextual relevancy, hallucination và custom metrics. |
-| CI/CD integration | Có thể chạy trong script/CI nhưng cần tự tạo quality gate. | Tích hợp tự nhiên với pytest, assertion và test report. |
-| Kết quả trên cùng dataset | Có xu hướng strict hơn với grounding và retrieval; phù hợp chẩn đoán RAG. | Có thể đánh giá linh hoạt theo test case/rubric và dễ mở rộng assertion. |
-| Insight rút ra | Mạnh ở phân tích từng bước Retriever → Context → Answer. | Mạnh ở regression test và chặn deployment theo từng test case. |
+
+| Tiêu chí                    | RAGAS                                                                                                | DeepEval                                                                                |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Setup complexity              | Cần cài framework, khai báo dataset và metric; phù hợp đánh giá RAG theo pipeline.          | Cài đặt đơn giản hơn với pytest-native test case và metric objects.            |
+| Metrics available             | Faithfulness, answer relevance, context recall, context precision và nhiều metric RAG chuẩn hóa. | Faithfulness, answer relevance, contextual relevancy, hallucination và custom metrics. |
+| CI/CD integration             | Có thể chạy trong script/CI nhưng cần tự tạo quality gate.                                    | Tích hợp tự nhiên với pytest, assertion và test report.                           |
+| Kết quả trên cùng dataset | Có xu hướng strict hơn với grounding và retrieval; phù hợp chẩn đoán RAG.                 | Có thể đánh giá linh hoạt theo test case/rubric và dễ mở rộng assertion.      |
+| Insight rút ra               | Mạnh ở phân tích từng bước Retriever → Context → Answer.                                    | Mạnh ở regression test và chặn deployment theo từng test case.                     |
 
 - Scores có nhất quán không?
 - Framework nào strict hơn và vì sao?
@@ -294,14 +304,15 @@ thay đổi Context Recall hay không.
 4. Rerank cùng tập chunks, không thêm hoặc xóa chunk.
 5. Tính lại hai metrics và giải thích kết quả.
 
-| ID | Recall before | Recall after | Precision before | Precision after | Delta Precision |
-|---|---:|---:|---:|---:|---:|
-| E01 | 1.000 | 1.000 | 1.000 | 1.000 | +0.000 |
-| M02 | 1.000 | 1.000 | 0.583 | 1.000 | +0.417 |
-| M05 | 0.941 | 0.941 | 1.000 | 1.000 | +0.000 |
-| A01 | 0.667 | 0.667 | 0.589 | 1.000 | +0.411 |
-| A02 | 1.000 | 1.000 | 0.867 | 1.000 | +0.133 |
-| **Avg** | 0.922 | 0.922 | 0.808 | 0.980 | +0.192 |
+
+| ID      | Recall before | Recall after | Precision before | Precision after | Delta Precision |
+| ------- | ------------: | -----------: | ---------------: | --------------: | --------------: |
+| E01     |         1.000 |        1.000 |            1.000 |           1.000 |          +0.000 |
+| M02     |         1.000 |        1.000 |            0.583 |           1.000 |          +0.417 |
+| M05     |         0.941 |        0.941 |            1.000 |           1.000 |          +0.000 |
+| A01     |         0.667 |        0.667 |            0.589 |           1.000 |          +0.411 |
+| A02     |         1.000 |        1.000 |            0.867 |           1.000 |          +0.133 |
+| **Avg** |         0.922 |        0.922 |            0.808 |           0.980 |          +0.192 |
 
 **Tại sao Recall dự kiến không đổi?**
 
@@ -323,11 +334,11 @@ Hoàn thành `reflection.md` bằng kết quả thật từ Exercise 3.2.
 
 Hoàn thành kiểm tra cuối trong khoảng 11:50–12:00.
 
-- [x] Tất cả required tests pass.
-- [x] `golden_dataset.json` validate thành công.
-- [x] Exercise 3.1 hoàn thành trong file JSON và bảng kết quả phía trên.
-- [x] Exercise 3.2 có năm metrics, aggregate report và ba cases thấp nhất.
-- [x] Exercise 3.3 có rubric 1–5 và bias controls.
-- [x] `reflection.md` có ba failure analyses và regression strategy.
-- [x] Đã có `solution/solution.py` với đầy đủ evaluation core.
-- [x] Đã hoàn thành bonus Exercise 3.4 và 3.5.
+- [X]  Tất cả required tests pass.
+- [X]  `golden_dataset.json` validate thành công.
+- [X]  Exercise 3.1 hoàn thành trong file JSON và bảng kết quả phía trên.
+- [X]  Exercise 3.2 có năm metrics, aggregate report và ba cases thấp nhất.
+- [X]  Exercise 3.3 có rubric 1–5 và bias controls.
+- [X]  `reflection.md` có ba failure analyses và regression strategy.
+- [X]  Đã có `solution/solution.py` với đầy đủ evaluation core.
+- [X]  Đã hoàn thành bonus Exercise 3.4 và 3.5.

@@ -269,19 +269,19 @@ verbosity bias và self-preference bằng cách nào?
 Chỉ làm sau khi hoàn thành 3.1–3.3. Chọn hai framework trong RAGAS, DeepEval
 và TruLens; chạy hoặc thiết kế một so sánh có cùng input dataset.
 
-| Tiêu chí | Framework 1: ____ | Framework 2: ____ |
+| Tiêu chí | RAGAS | DeepEval |
 |---|---|---|
-| Setup complexity | | |
-| Metrics available | | |
-| CI/CD integration | | |
-| Kết quả trên cùng dataset | | |
-| Insight rút ra | | |
+| Setup complexity | Cần cài framework, khai báo dataset và metric; phù hợp đánh giá RAG theo pipeline. | Cài đặt đơn giản hơn với pytest-native test case và metric objects. |
+| Metrics available | Faithfulness, answer relevance, context recall, context precision và nhiều metric RAG chuẩn hóa. | Faithfulness, answer relevance, contextual relevancy, hallucination và custom metrics. |
+| CI/CD integration | Có thể chạy trong script/CI nhưng cần tự tạo quality gate. | Tích hợp tự nhiên với pytest, assertion và test report. |
+| Kết quả trên cùng dataset | Có xu hướng strict hơn với grounding và retrieval; phù hợp chẩn đoán RAG. | Có thể đánh giá linh hoạt theo test case/rubric và dễ mở rộng assertion. |
+| Insight rút ra | Mạnh ở phân tích từng bước Retriever → Context → Answer. | Mạnh ở regression test và chặn deployment theo từng test case. |
 
 - Scores có nhất quán không?
 - Framework nào strict hơn và vì sao?
 - Hai framework có tìm ra cùng failure cases không?
 
-> *Phân tích:*
+> Hai framework không nhất thiết cho điểm giống hệt vì cách chuẩn hóa claim, context và judge khác nhau. RAGAS phù hợp hơn khi cần phân tích retrieval và các metric RAG; DeepEval phù hợp hơn khi muốn đưa evaluation vào CI/CD như unit test. Nên dùng cùng dataset, cùng threshold và calibrate bằng một số human labels trước khi kết luận framework nào strict hơn. Các failure rõ như hallucination ở M05 và incomplete ở A02 nhiều khả năng được cả hai phát hiện, nhưng mức điểm có thể khác.
 
 ### Exercise 3.5 — Retrieval Reranking (Bonus +5)
 
@@ -296,20 +296,20 @@ thay đổi Context Recall hay không.
 
 | ID | Recall before | Recall after | Precision before | Precision after | Delta Precision |
 |---|---:|---:|---:|---:|---:|
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| **Avg** | | | | | |
+| E01 | 1.000 | 1.000 | 1.000 | 1.000 | +0.000 |
+| M02 | 1.000 | 1.000 | 0.583 | 1.000 | +0.417 |
+| M05 | 0.941 | 0.941 | 1.000 | 1.000 | +0.000 |
+| A01 | 0.667 | 0.667 | 0.589 | 1.000 | +0.411 |
+| A02 | 1.000 | 1.000 | 0.867 | 1.000 | +0.133 |
+| **Avg** | 0.922 | 0.922 | 0.808 | 0.980 | +0.192 |
 
 **Tại sao Recall dự kiến không đổi?**
 
-> Metric yếu nhất là Faithfulness (0.720), sát với Relevance (0.724), trong khi Context Recall (0.922) và Context Precision (0.892) cao hơn rõ rệt. Điều này gợi ý vấn đề chính nằm ở generation/grounding hơn là retrieval: retriever thường lấy được evidence, nhưng câu trả lời M05 đưa thêm thông tin refund và scholarship không nằm trong gold context, còn A01/A02 cần câu trả lời từ chối và chuyển hướng đầy đủ hơn.
+> Recall dự kiến không đổi vì reranking chỉ thay đổi thứ tự các chunk, không thêm hoặc xóa chunk. Context Recall dùng hợp của toàn bộ chunk nên không phụ thuộc ranking. Trong thử nghiệm, Recall giữ nguyên 0.922 cho cả 5 case; Context Precision tăng trung bình từ 0.808 lên 0.980, chủ yếu ở M02, A01 và A02 vì chunk liên quan được đưa lên trước.
 
 **Khi nào reranking không đủ và cần sửa retriever/query/chunking?**
 
-> *Câu trả lời:*
+> Reranking không đủ khi evidence cần thiết không được retrieve, chunk bị cắt mất thông tin, query không thể hiện đúng intent, hoặc corpus có tài liệu mâu thuẫn. Khi Recall thấp, cần sửa query expansion, retriever, metadata filter hoặc chunking. Khi Recall cao nhưng answer vẫn hallucinate/incomplete như M05, cần sửa prompt, grounding guardrail và generation thay vì chỉ rerank.
 
 ---
 
@@ -323,11 +323,11 @@ Hoàn thành `reflection.md` bằng kết quả thật từ Exercise 3.2.
 
 Hoàn thành kiểm tra cuối trong khoảng 11:50–12:00.
 
-- [ ] Tất cả required tests pass.
-- [ ] `golden_dataset.json` validate thành công.
-- [ ] Exercise 3.1 hoàn thành trong file JSON và bảng kết quả phía trên.
-- [ ] Exercise 3.2 có năm metrics, aggregate report và ba cases thấp nhất.
-- [ ] Exercise 3.3 có rubric 1–5 và bias controls.
-- [ ] `reflection.md` có ba failure analyses và regression strategy.
-- [ ] Đã copy `template.py` thành `solution/solution.py`.
-- [ ] Exercise 3.4 và 3.5 chỉ làm nếu chọn bonus.
+- [x] Tất cả required tests pass.
+- [x] `golden_dataset.json` validate thành công.
+- [x] Exercise 3.1 hoàn thành trong file JSON và bảng kết quả phía trên.
+- [x] Exercise 3.2 có năm metrics, aggregate report và ba cases thấp nhất.
+- [x] Exercise 3.3 có rubric 1–5 và bias controls.
+- [x] `reflection.md` có ba failure analyses và regression strategy.
+- [x] Đã có `solution/solution.py` với đầy đủ evaluation core.
+- [x] Đã hoàn thành bonus Exercise 3.4 và 3.5.

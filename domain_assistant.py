@@ -244,23 +244,37 @@ class TextGenerator(Protocol):
 
 class OpenAIGenerator:
     def __init__(self, max_output_tokens: int = 300) -> None:
-        api_key = os.getenv("OPENAI_API_KEY", "").strip()
-        self.model = os.getenv("OPENAI_MODEL", "").strip()
+        # OpenRouter exposes an OpenAI-compatible Chat Completions API.
+        # Prefer OpenRouter when configured, while retaining OpenAI support.
+        self.provider = os.getenv("LLM_PROVIDER", "openrouter").strip().lower()
+        if self.provider == "openai":
+            api_key = os.getenv("OPENAI_API_KEY", "").strip()
+            self.model = os.getenv("OPENAI_MODEL", "").strip()
+            base_url = None
+        else:
+            api_key = os.getenv("OPENROUTER_API_KEY", "").strip()
+            self.model = os.getenv("OPENROUTER_MODEL", "").strip()
+            base_url = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1").strip()
         if not api_key:
-            raise RuntimeError("OPENAI_API_KEY is missing from .env")
+            variable = "OPENAI_API_KEY" if self.provider == "openai" else "OPENROUTER_API_KEY"
+            raise RuntimeError(f"{variable} is missing from .env")
         if not self.model:
-            raise RuntimeError("OPENAI_MODEL is missing from .env")
-        self.client = OpenAI(api_key=api_key)
+            variable = "OPENAI_MODEL" if self.provider == "openai" else "OPENROUTER_MODEL"
+            raise RuntimeError(f"{variable} is missing from .env")
+        client_kwargs = {"api_key": api_key}
+        if base_url:
+            client_kwargs["base_url"] = base_url
+        self.client = OpenAI(**client_kwargs)
         self.max_output_tokens = max_output_tokens
 
     def generate(self, prompt: str) -> str:
-        response = self.client.responses.create(
+        response = self.client.chat.completions.create(
             model=self.model,
-            input=prompt,
+            messages=[{"role": "user", "content": prompt}],
             temperature=0,
-            max_output_tokens=self.max_output_tokens,
+            max_tokens=self.max_output_tokens,
         )
-        answer = response.output_text.strip()
+        answer = (response.choices[0].message.content or "").strip()
         if not answer:
             raise RuntimeError("OpenAI returned an empty answer")
         return answer

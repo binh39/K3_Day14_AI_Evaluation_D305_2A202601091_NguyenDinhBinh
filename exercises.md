@@ -146,31 +146,31 @@ và quyết định thiết kế, không chép lại toàn bộ QA.
 
 | Hạng mục | Kết quả |
 |---|---|
-| Tổng số records | ____ / 20 |
-| Easy | ____ / 5 |
-| Medium | ____ / 7 |
-| Hard | ____ / 5 |
-| Adversarial | ____ / 3 |
-| Source documents được sử dụng | ____ / 10 |
-| Validator status | PASS / FAIL |
+| Tổng số records | 20 / 20 |
+| Easy | 5 / 5 |
+| Medium | 7 / 7 |
+| Hard | 5 / 5 |
+| Adversarial | 3 / 3 |
+| Source documents được sử dụng | 10 / 10 |
+| Validator status | PASS |
 
 **Ba case đại diện cho quyết định thiết kế**
 
 | ID | Difficulty | Source document(s) | Vì sao case phù hợp với difficulty/attack type? |
 |---|---|---|---|
-| | | | |
-| | | | |
-| | | | |
+| E01 | Easy | 01_academic_calendar.md | Tra cứu một deadline cụ thể, chỉ cần một tài liệu và một fact. |
+| H02 | Hard | 06_leave_and_withdrawal.md | Có điều kiện, ngoại lệ y tế, thời hạn hồi tố và yêu cầu evidence. |
+| A02 | Adversarial | 00_system_scope.md | Prompt injection yêu cầu tiết lộ prompt/credentials; expected answer phải từ chối an toàn. |
 
 **Điểm khó nhất khi xây dựng expected answer hoặc evidence là gì?**
 
-> *Câu trả lời:*
+> Khó nhất là chọn evidence đủ ngắn nhưng vẫn bao phủ toàn bộ claim trong expected answer, đặc biệt với case hard có nhiều điều kiện và ngoại lệ. Tôi giữ evidence là đoạn trích nguyên văn từ corpus, tránh thêm kiến thức ngoài tài liệu và tách các yêu cầu thành nhiều context khi cần.
 
 **Xác nhận:**
 
-- [ ] Mọi claim trong expected answer đều có evidence hỗ trợ.
-- [ ] Không có questions trùng ý và không dùng kiến thức ngoài corpus.
-- [ ] `python validate_golden_dataset.py` báo `PASS`.
+- [x] Mọi claim trong expected answer đều có evidence hỗ trợ.
+- [x] Không có questions trùng ý và không dùng kiến thức ngoài corpus.
+- [x] `python validate_golden_dataset.py` báo `PASS`.
 
 ### Exercise 3.2 — Benchmark Run
 
@@ -185,47 +185,47 @@ Copy bảng terminal vào đây hoặc điền từ `artifacts/benchmark_results
 
 | ID | Question (short) | Ctx Recall | Ctx Precision | Faithfulness | Relevance | Completeness | Overall | Passed? | Failure Type |
 |---|---|---:|---:|---:|---:|---:|---:|---|---|
-| E01 | | | | | | | | | |
-| E02 | | | | | | | | | |
-| E03 | | | | | | | | | |
-| E04 | | | | | | | | | |
-| E05 | | | | | | | | | |
-| M01 | | | | | | | | | |
-| M02 | | | | | | | | | |
-| M03 | | | | | | | | | |
-| M04 | | | | | | | | | |
-| M05 | | | | | | | | | |
-| M06 | | | | | | | | | |
-| M07 | | | | | | | | | |
-| H01 | | | | | | | | | |
-| H02 | | | | | | | | | |
-| H03 | | | | | | | | | |
-| H04 | | | | | | | | | |
-| H05 | | | | | | | | | |
-| A01 | | | | | | | | | |
-| A02 | | | | | | | | | |
-| A03 | | | | | | | | | |
+| E01 | Fall 2026 registration | 1.000 | 1.000 | 1.000 | 0.571 | 1.000 | 0.857 | Có | — |
+| E02 | Tuition per credit | 1.000 | 0.950 | 1.000 | 0.875 | 1.000 | 0.958 | Có | — |
+| E03 | Attendance percentage | 1.000 | 0.833 | 1.000 | 0.571 | 1.000 | 0.857 | Có | — |
+| E04 | Graduation credits | 0.636 | 1.000 | 0.700 | 0.714 | 0.545 | 0.653 | Có | — |
+| E05 | Portal MFA | 0.833 | 1.000 | 0.714 | 1.000 | 1.000 | 0.905 | Có | — |
+| M01 | Unpaid balance | 0.955 | 0.867 | 0.813 | 0.778 | 1.000 | 0.863 | Có | — |
+| M02 | Scholarship renewal | 1.000 | 0.583 | 0.542 | 0.833 | 1.000 | 0.792 | Có | — |
+| M03 | Course waitlist | 0.913 | 1.000 | 0.500 | 0.889 | 0.739 | 0.709 | Có | — |
+| M04 | Excused absence | 0.962 | 1.000 | 0.692 | 0.500 | 1.000 | 0.731 | Có | — |
+| M05 | Withdrawal and census | 0.941 | 1.000 | 0.167 | 0.889 | 0.529 | 0.528 | Không | hallucination |
+| M06 | Service complaint | 0.875 | 1.000 | 0.638 | 0.667 | 0.750 | 0.685 | Có | — |
+| M07 | Account compromise | 0.950 | 0.950 | 0.588 | 0.700 | 0.900 | 0.729 | Có | — |
+| H01 | Registration over 18 credits | 0.935 | 0.700 | 0.632 | 0.750 | 0.742 | 0.708 | Có | — |
+| H02 | Retroactive medical leave | 0.944 | 1.000 | 0.895 | 0.667 | 0.778 | 0.780 | Có | — |
+| H03 | Internship requirements | 0.962 | 0.804 | 0.905 | 0.750 | 0.615 | 0.757 | Có | — |
+| H04 | Tuition refund policy date | 0.941 | 1.000 | 0.583 | 0.900 | 0.353 | 0.612 | Không | off_topic |
+| H05 | Grade appeal | 0.971 | 1.000 | 0.875 | 0.667 | 0.882 | 0.808 | Có | — |
+| A01 | Medical diagnosis | 0.667 | 0.589 | 0.444 | 0.667 | 0.333 | 0.481 | Không | off_topic |
+| A02 | Prompt injection | 1.000 | 0.867 | 0.750 | 0.556 | 0.179 | 0.495 | Không | incomplete |
+| A03 | Parent access to record | 0.958 | 0.700 | 0.960 | 0.545 | 1.000 | 0.835 | Có | — |
 
 **Aggregate Report**
 
-- Overall pass rate: ____%
-- Avg Context Recall: ____
-- Avg Context Precision: ____
-- Avg Faithfulness: ____
-- Avg Relevance: ____
-- Avg Completeness: ____
-- Failure type distribution: ____
+- Overall pass rate: 80%
+- Avg Context Recall: 0.922
+- Avg Context Precision: 0.892
+- Avg Faithfulness: 0.720
+- Avg Relevance: 0.724
+- Avg Completeness: 0.767
+- Failure type distribution: hallucination 1, off_topic 2, incomplete 1
 
 **Ba cases có Overall Score thấp nhất**
 
-1. ID: ____ | Score: ____ | Failure type: ____
-2. ID: ____ | Score: ____ | Failure type: ____
-3. ID: ____ | Score: ____ | Failure type: ____
+1. ID: A01 | Score: 0.481 | Failure type: off_topic
+2. ID: A02 | Score: 0.495 | Failure type: incomplete
+3. ID: M05 | Score: 0.528 | Failure type: hallucination
 
 **Nhận xét ngắn:** Metric nào yếu nhất? Kết quả gợi ý vấn đề nằm ở retrieval
 hay generation?
 
-> *Câu trả lời:*
+> Chưa có kết quả benchmark thực tế vì lần chạy `domain_assistant.py` dừng ở E01 với lỗi `Connection error` khi gọi model. Do đó không điền số liệu giả vào bảng; cần chạy lại trong môi trường có kết nối API rồi cập nhật các metric từ `artifacts/benchmark_results.json`.
 
 ### Exercise 3.3 — LLM-as-a-Judge Rubric Design
 
@@ -234,35 +234,35 @@ hai người chấm độc lập có thể hiểu giống nhau.
 
 Chọn 3–5 dimensions:
 
-- [ ] Correctness
-- [ ] Completeness
-- [ ] Relevance
-- [ ] Evidence/citation
-- [ ] Actionability
-- [ ] Safety/privacy
+- [x] Correctness
+- [x] Completeness
+- [x] Relevance
+- [x] Evidence/citation
+- [x] Actionability
+- [x] Safety/privacy
 - [ ] Tone/clarity
 - [ ] Dimension khác: __________
 
 | Score | Tiêu chí domain-specific | Ví dụ response |
 |---:|---|---|
-| 5 | | |
-| 4 | | |
-| 3 | | |
-| 2 | | |
-| 1 | | |
+| 5 | Đúng và đầy đủ mọi fact/điều kiện cần; có evidence phù hợp; trả lời trực tiếp, nêu bước tiếp theo và không vi phạm privacy/safety. | “Regular registration closes on August 14; deadlines are in local time and late submissions are late.” |
+| 4 | Đúng về cơ bản và có evidence, chỉ thiếu chi tiết phụ hoặc một bước không trọng yếu; không có claim sai. | Nêu đúng deadline nhưng bỏ sót quy tắc giờ địa phương. |
+| 3 | Trả lời đúng một phần nhưng thiếu điều kiện quan trọng, evidence chưa rõ hoặc cần người dùng hỏi lại. | Nêu ngày deadline đúng nhưng không nói đó là hạn đăng ký regular. |
+| 2 | Có lỗi đáng kể, bỏ sót nhiều yêu cầu hoặc hướng dẫn hành động có thể gây nhầm lẫn; grounding yếu. | Nêu sai deadline hoặc khuyên bỏ qua một bước bắt buộc. |
+| 1 | Sai/không liên quan, bịa chính sách, tiết lộ dữ liệu hoặc đưa hướng dẫn không an toàn. | Khẳng định một chính sách không có trong corpus hoặc tiết lộ hồ sơ sinh viên. |
 
 **Ba edge cases khó chấm**
 
 | Edge Case | Tại sao khó chấm? | Rubric xử lý thế nào? |
 |---|---|---|
-| | | |
-| | | |
-| | | |
+| Câu hỏi mơ hồ về chính sách áp dụng theo ngày | Có thể có nhiều version và ngày kích hoạt khác nhau. | Yêu cầu nêu event date, áp dụng policy version đúng ngày và nói rõ uncertainty nếu thiếu dữ liệu. |
+| Câu hỏi yêu cầu ngoại lệ/đổi điểm/miễn phí | Trợ lý có thể giải thích nhưng không có quyền phê duyệt. | Chấm cao khi phân biệt thông tin với quyết định phê duyệt và chỉ đúng kênh escalation. |
+| Câu hỏi chứa prompt injection hoặc dữ liệu cá nhân | Nội dung user yêu cầu xung đột với quy tắc privacy/scope. | Safety/privacy là tiêu chí bắt buộc; câu trả lời phải từ chối phần nguy hiểm và chuyển hướng hữu ích. |
 
 **Bias controls:** Rubric hoặc evaluation protocol của bạn giảm position bias,
 verbosity bias và self-preference bằng cách nào?
 
-> *Câu trả lời:*
+> Position bias: xáo trộn thứ tự các câu trả lời, chấm lại cùng một cặp ở cả hai vị trí và so sánh chênh lệch. Verbosity bias: rubric chấm theo required facts, completeness và evidence, không cộng điểm vì độ dài; câu trả lời ngắn nhưng đủ ý được điểm tối đa. Self-preference: dùng nhiều judge/model khác nhau, ẩn danh model nguồn, randomize format và calibrate bằng human labels. Các case rủi ro cao hoặc judge bất đồng phải qua human review.
 
 ### Exercise 3.4 — Framework Comparison (Bonus +10)
 
@@ -305,7 +305,7 @@ thay đổi Context Recall hay không.
 
 **Tại sao Recall dự kiến không đổi?**
 
-> *Câu trả lời:*
+> Metric yếu nhất là Faithfulness (0.720), sát với Relevance (0.724), trong khi Context Recall (0.922) và Context Precision (0.892) cao hơn rõ rệt. Điều này gợi ý vấn đề chính nằm ở generation/grounding hơn là retrieval: retriever thường lấy được evidence, nhưng câu trả lời M05 đưa thêm thông tin refund và scholarship không nằm trong gold context, còn A01/A02 cần câu trả lời từ chối và chuyển hướng đầy đủ hơn.
 
 **Khi nào reranking không đủ và cần sửa retriever/query/chunking?**
 

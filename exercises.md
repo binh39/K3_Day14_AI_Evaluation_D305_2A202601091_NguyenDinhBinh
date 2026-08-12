@@ -28,13 +28,13 @@ Theo bài giảng:
 Với từng metric, xác định khi nào score thấp có thể chấp nhận và khi nào là
 critical.
 
-| Metric | Acceptable Low Score Scenario | Critical Low Score Scenario | Action Required |
+| Metric | Trường hợp điểm thấp có thể chấp nhận | Trường hợp điểm thấp nghiêm trọng | Hành động cần thực hiện |
 |---|---|---|---|
-| Faithfulness | | | |
-| Answer Relevance | | | |
-| Context Recall | | | |
-| Context Precision | | | |
-| Completeness | | | |
+| Faithfulness | Điểm 0.6-0.8 có thể chấp nhận với câu trả lời thăm dò hoặc khi ngữ cảnh chuẩn chưa đầy đủ, nếu các claim rủi ro cao được kiểm tra. | Dưới 0.6, đặc biệt với chính sách, học phí, thời hạn hoặc an toàn/quyền riêng tư: câu trả lời có thể thiếu căn cứ hoặc bị bịa. | Kiểm tra trích dẫn và bằng chứng đã truy xuất; cải thiện grounding/retrieval và yêu cầu hệ thống từ chối khi thiếu bằng chứng. |
+| Answer Relevance | Điểm 0.6-0.8 có thể chấp nhận với câu hỏi rộng hoặc mơ hồ nếu câu trả lời có hướng làm rõ hữu ích. | Dưới 0.6 nghĩa là câu trả lời không đáp ứng ý định của sinh viên, nhất là với yêu cầu hành chính khẩn cấp. | Kiểm tra nhận diện ý định và prompt/routing; bổ sung câu hỏi đại diện, yêu cầu trả lời trực tiếp hoặc hỏi lại để làm rõ. |
+| Context Recall | Điểm 0.6-0.8 có thể chấp nhận với tra cứu đơn giản chỉ cần một chunk hoặc khi bằng chứng bị thiếu không mang tính thiết yếu. | Dưới 0.6 khi thiếu quy tắc đủ điều kiện, ngoại lệ, ngày tháng hoặc các bước bắt buộc. | Cải thiện mở rộng truy vấn, lập chỉ mục, chia chunk và lọc metadata; kiểm thử câu hỏi nhiều tài liệu và trường hợp biên. |
+| Context Precision | Điểm 0.6-0.8 có thể chấp nhận khi các chunk thừa không gây hại và ưu tiên độ trễ/chi phí. | Dưới 0.6 khi chunk chính sách không liên quan hoặc mâu thuẫn chiếm các vị trí đầu và có thể làm sai phần sinh câu trả lời. | Tinh chỉnh xếp hạng và bộ lọc, giảm kết quả top-k nhiễu, xác minh bộ sinh trích dẫn đúng chunk liên quan. |
+| Completeness | Điểm 0.6-0.8 có thể chấp nhận với câu trả lời ban đầu ngắn nếu chi tiết bị bỏ sót là tùy chọn và câu trả lời chỉ rõ bước tiếp theo. | Dưới 0.6 khi thiếu bước bắt buộc, thời hạn, điều kiện đủ tiêu chuẩn, ngoại lệ hoặc kênh chuyển tiếp. | Đối chiếu với các ý bắt buộc; cải thiện retrieval và template trả lời có cấu trúc, sau đó human review các case có tác động cao. |
 
 ### Exercise 1.2 — Bias trong LLM-as-a-Judge
 
@@ -46,29 +46,29 @@ Ba bias thường gặp:
 
 **Câu 1: Thiết kế experiment phát hiện position bias với ít nhất hai conditions.**
 
-> *Câu trả lời:*
+> Dùng cùng một tập câu hỏi và các cặp câu trả lời đã được người đánh giá kiểm tra là tương đương về chất lượng. Ở điều kiện A, đặt câu trả lời A trước B; ở điều kiện B, đảo thứ tự. Xáo trộn câu hỏi và chạy nhiều lần nếu bộ đánh giá có tính ngẫu nhiên. So sánh điểm/lựa chọn giữa hai điều kiện: nếu câu trả lời đặt trước thường thắng hoặc điểm thay đổi đáng kể dù nội dung không đổi, đó là position bias. Có thể thêm điều kiện C với thứ tự ngẫu nhiên để kiểm chứng.
 
 **Câu 2: Làm thế nào giảm verbosity bias bằng rubric design?**
 
-> *Câu trả lời:*
+> Rubric phải chấm theo các tiêu chí độc lập và chất lượng thông tin, không theo độ dài. Nêu rõ các sự kiện/bước bắt buộc, độ đúng, grounding và mức độ trực tiếp; quy định rằng câu trả lời ngắn nhưng đủ ý được điểm tối đa, còn phần lan man hoặc lặp lại không được cộng điểm. Tách completeness khỏi văn phong và yêu cầu bộ đánh giá giải thích điểm bằng bằng chứng cụ thể.
 
 **Câu 3: Tại sao cần calibrate LLM judge với human labels?**
 
-> *Câu trả lời:*
+> Nhãn của con người là mốc chuẩn để đo độ đồng thuận, phát hiện bộ đánh giá quá dễ/quá khắt khe và kiểm tra việc chấm có đúng tiêu chí lĩnh vực hay không. Calibration giúp hiệu chỉnh rubric/prompt, chọn ngưỡng, phát hiện drift và tránh biến bias ổn định của model thành quality gate tự động. Các case bất đồng hoặc rủi ro cao cần được người đánh giá xem xét.
 
 ### Exercise 1.3 — Evaluation trong CI/CD
 
 **Câu 1: Chọn threshold để block deployment.**
 
-| Metric | Threshold | Lý do |
+| Metric | Ngưỡng | Lý do |
 |---|---:|---|
-| Faithfulness | | |
-| Answer Relevance | | |
-| Completeness | | |
+| Faithfulness | 0.80 | Chặn nếu điểm trung bình dưới 0.80 hoặc có case nghiêm trọng dưới 0.60; claim chính sách không có căn cứ là lỗi chặn phát hành. |
+| Answer Relevance | 0.75 | Chặn nếu điểm trung bình dưới 0.75 hoặc nhóm ý định quan trọng dưới 0.60; câu trả lời phải đáp ứng hoặc làm rõ ý định. |
+| Completeness | 0.75 | Chặn nếu điểm trung bình dưới 0.75 hoặc bỏ sót bước/thời hạn bắt buộc trong các case cần thiết. |
 
 **Câu 2: Khi nào dùng offline evaluation, online evaluation và human review?**
 
-> *Câu trả lời:*
+> Đánh giá offline dùng trước mỗi lần phát hành và sau khi đổi model, prompt, retriever hoặc chunking, với golden dataset để kiểm thử hồi quy. Đánh giá online dùng sau khi triển khai trên lưu lượng thật để theo dõi drift, độ trễ, chi phí và phản hồi. Người đánh giá xem xét thủ công để tạo/hiệu chỉnh nhãn, kiểm tra các case rủi ro cao hoặc case có bất đồng giữa bộ đánh giá và kiểm tra theo luật, đồng thời đánh giá truy vấn mới/đối kháng. Kết quả online và human review nên được đưa ngược vào dataset và bộ kiểm thử hồi quy.
 
 ---
 
